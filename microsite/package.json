@@ -1,0 +1,8 @@
+{
+  "name": "neoserra-training-search",
+  "version": "1.0.0",
+  "description": "Neoserra Training Search Microsite",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}

@@ -1,14 +1,9 @@
 // Neoserra API Configuration with Proxy Support
 const NEOSERRA_CONFIG = {
-  // Option 1: Use CORS proxy (public, simple, works immediately)
-  useProxy: true,
-  proxyUrl: 'https://corsproxy.io/?',
+  // Use Netlify serverless function (works when deployed to Netlify)
+  useNetlifyFunction: true,
 
-  // Option 2: Use your own Netlify/Vercel function (most secure)
-  // useProxy: true,
-  // proxyUrl: '/.netlify/functions/api-proxy?endpoint=',
-
-  // Original API (will fail with CORS on GitHub Pages)
+  // Original API
   apiUrl: 'https://norcal.neoserra.com/api/v1/',
   apiToken: 'b4afa19f-c2f5-45c5-89b0-82ce7bc79145'
 };
@@ -21,37 +16,34 @@ let lastResults = [];
  */
 async function neoserraRequest(endpoint, method = 'GET', data = null) {
   let url;
-
-  if (NEOSERRA_CONFIG.useProxy) {
-    // Use proxy
-    url = NEOSERRA_CONFIG.proxyUrl + encodeURIComponent(NEOSERRA_CONFIG.apiUrl + endpoint);
-  } else {
-    // Direct API call
-    url = NEOSERRA_CONFIG.apiUrl + endpoint;
-  }
-
-  const options = {
+  let options = {
     method: method,
     headers: {
       'Content-Type': 'application/json'
     }
   };
 
-  // Add authorization header only for direct API calls
-  if (!NEOSERRA_CONFIG.useProxy) {
+  if (NEOSERRA_CONFIG.useNetlifyFunction) {
+    // Use Netlify serverless function
+    url = '/.netlify/functions/api-proxy?endpoint=' + encodeURIComponent(endpoint);
+    if (method === 'POST' && data) {
+      options.body = JSON.stringify(data);
+    }
+  } else {
+    // Direct API call (for local testing)
+    url = NEOSERRA_CONFIG.apiUrl + endpoint;
     options.headers['Authorization'] = 'Bearer ' + NEOSERRA_CONFIG.apiToken;
-    options.headers['User-Agent'] = 'Mozilla/5.0';
-  }
-
-  if (method === 'POST' && data) {
-    options.body = JSON.stringify(data);
+    if (method === 'POST' && data) {
+      options.body = JSON.stringify(data);
+    }
   }
 
   try {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      throw new Error(`API Error ${response.status}: ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`API Error ${response.status}: ${errorText}`);
     }
 
     return await response.json();
