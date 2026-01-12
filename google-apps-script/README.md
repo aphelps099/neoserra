@@ -6,7 +6,8 @@ Complete integration between Google Sheets and the Neoserra API for creating cli
 
 1. **Create Client Records**: Add new clients to Neoserra directly from a Google Sheet
 2. **Fetch Training Events**: Pull training event data for any date range into Google Sheets
-3. **Easy-to-Use Interface**: Custom menu and optional sidebar control panel
+3. **💬 Chat Interface**: Ask questions in natural language to find trainings (NEW!)
+4. **Easy-to-Use Interface**: Custom menu and optional sidebar control panel
 
 ## 📦 Files Included
 
@@ -14,14 +15,34 @@ Complete integration between Google Sheets and the Neoserra API for creating cli
 - **`NeoserraIntegration.js`** - Basic version with menu-based interface
 - **`EnhancedVersion.js`** - Enhanced version with custom sidebar UI
 - **`Sidebar.html`** - HTML sidebar interface for the enhanced version
+- **`ChatInterface.js`** - 💬 Chat-style training search (RECOMMENDED!)
+- **`ChatSidebar.html`** - Chat interface UI
 
 ### Documentation
 - **`SETUP-INSTRUCTIONS.md`** - Complete setup guide
+- **`CHAT-INTERFACE-GUIDE.md`** - Chat interface user guide
 - **`CLIENTS_TEMPLATE.csv`** - Sample client data template
 
 ## 🚀 Quick Start
 
-### Option 1: Basic Version (Recommended for Beginners)
+### Option 1: 💬 Chat Interface (RECOMMENDED - Most User-Friendly!)
+
+**Best for: Finding trainings with natural language questions**
+
+1. Create a new Google Sheet
+2. Go to **Extensions** → **Apps Script**
+3. Copy the contents of `ChatInterface.js` into the script editor
+4. Click **+** next to Files → **HTML** → Name it "ChatSidebar"
+5. Copy the contents of `ChatSidebar.html` into this file
+6. Save and refresh your sheet
+7. Click **Neoserra** → **💬 Training Search Chat**
+8. Ask questions like "What trainings are in Oakland this week?"
+
+📖 See **CHAT-INTERFACE-GUIDE.md** for detailed instructions
+
+### Option 2: Basic Version (Simple Menu Interface)
+
+**Best for: Batch client creation and basic event fetching**
 
 1. Create a new Google Sheet
 2. Go to **Extensions** → **Apps Script**
@@ -29,7 +50,9 @@ Complete integration between Google Sheets and the Neoserra API for creating cli
 4. Save and refresh your sheet
 5. Use the **Neoserra** menu to interact with the API
 
-### Option 2: Enhanced Version (With Sidebar UI)
+### Option 3: Enhanced Version (With Sidebar UI)
+
+**Best for: Visual control panel with date pickers**
 
 1. Create a new Google Sheet
 2. Go to **Extensions** → **Apps Script**
