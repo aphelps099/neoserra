@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neoserra Training Search | SBDC</title>
+  <meta name="description" content="Find SBDC training events instantly with our conversational search interface">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="nav-brand">
+        <span class="logo">🎓</span>
+        <span class="brand-name">SBDC Training Search</span>
+      </div>
+      <div class="nav-links">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#search" class="nav-link">Search Trainings</a>
+        <a href="#about" class="nav-link">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">Find Your Perfect Training</h1>
+        <p class="hero-subtitle">Ask questions in plain English and discover SBDC training events instantly</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" onclick="scrollToSearch()">Start Searching</button>
+          <a href="#how-it-works" class="btn btn-secondary">How It Works</a>
+        </div>
+        <div class="hero-examples">
+          <p class="examples-label">Try asking:</p>
+          <div class="example-chips">
+            <span class="chip">"What trainings are this week?"</span>
+            <span class="chip">"Show me business planning events"</span>
+            <span class="chip">"Online marketing workshops"</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="chat-preview">
+          <div class="chat-preview-header">
+            <span>💬 Training Search</span>
+          </div>
+          <div class="chat-preview-body">
+            <div class="preview-message user">What trainings are in Oakland?</div>
+            <div class="preview-message bot">Found 5 training events in Oakland!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon">💬</div>
+          <h3>Ask Your Question</h3>
+          <p>Type naturally: "What business trainings are happening this week?"</p>
+        </div>
+        <div class="step">
+          <div class="step-icon">🔍</div>
+          <h3>AI-Powered Search</h3>
+          <p>Our smart system understands dates, locations, and topics</p>
+        </div>
+        <div class="step">
+          <div class="step-icon">✨</div>
+          <h3>Get Results</h3>
+          <p>See perfectly matched training events with all the details</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search Section (Chat Interface) -->
+  <section id="search" class="search-section">
+    <div class="container">
+      <h2 class="section-title">Search Training Events</h2>
+      <div class="chat-container">
+        <!-- Chat Area -->
+        <div class="chat-messages" id="chatMessages">
+          <div class="welcome-card">
+            <h3>👋 Welcome to SBDC Training Search!</h3>
+            <p>I can help you find training events. Try asking:</p>
+            <ul class="example-list">
+              <li onclick="sendQuery('What trainings are happening this week?')">💬 What trainings are happening this week?</li>
+              <li onclick="sendQuery('Show me business planning events')">💬 Show me business planning events</li>
+              <li onclick="sendQuery('Online trainings in Oakland')">💬 Online trainings in Oakland</li>
+              <li onclick="sendQuery('Marketing workshops next month')">💬 Marketing workshops next month</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Quick Filters -->
+        <div class="quick-filters">
+          <span class="filters-label">Quick Filters:</span>
+          <button class="filter-chip" onclick="sendQuery('trainings this week')">This Week</button>
+          <button class="filter-chip" onclick="sendQuery('trainings this month')">This Month</button>
+          <button class="filter-chip" onclick="sendQuery('online trainings')">Online</button>
+          <button class="filter-chip" onclick="sendQuery('business planning')">Business Plan</button>
+          <button class="filter-chip" onclick="sendQuery('marketing trainings')">Marketing</button>
+          <button class="filter-chip" onclick="sendQuery('startup trainings')">Start-up</button>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-container">
+          <input
+            type="text"
+            id="chatInput"
+            class="chat-input"
+            placeholder="Ask me about trainings..."
+            onkeypress="handleKeyPress(event)"
+          >
+          <button class="send-btn" onclick="sendMessage()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M2 10L18 2L10 18L8 11L2 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about">
+    <div class="container">
+      <h2 class="section-title">About This Tool</h2>
+      <div class="about-content">
+        <div class="about-text">
+          <h3>Connecting You to SBDC Resources</h3>
+          <p>This training search tool connects directly to the Neoserra database, providing real-time access to all SBDC training events across California.</p>
+          <p>Our natural language interface makes it easy to find exactly what you're looking for without complex filters or forms.</p>
+          <div class="features-list">
+            <div class="feature">
+              <span class="feature-icon">✅</span>
+              <span>Real-time Neoserra data</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">✅</span>
+              <span>Natural language search</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">✅</span>
+              <span>Mobile-friendly interface</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">✅</span>
+              <span>Instant results</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-image">
+          <div class="stats-card">
+            <div class="stat">
+              <div class="stat-number" id="totalEvents">-</div>
+              <div class="stat-label">Training Events</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">20+</div>
+              <div class="stat-label">Topics Covered</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">50+</div>
+              <div class="stat-label">Locations</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span class="logo">🎓</span>
+          <span>SBDC Training Search</span>
+        </div>
+        <div class="footer-links">
+          <a href="https://norcal.neoserra.com" target="_blank">Neoserra</a>
+          <a href="#about">About</a>
+          <a href="#search">Search</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 SBDC. Powered by Neoserra API.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Typing Indicator (Hidden by default) -->
+  <template id="typingTemplate">
+    <div class="message bot typing-indicator">
+      <span></span><span></span><span></span>
+    </div>
+  </template>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
