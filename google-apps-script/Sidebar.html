@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    body {
+      font-family: 'Google Sans', Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+    h2 {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+      color: #202124;
+      font-weight: 500;
+    }
+
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #5f6368;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 8px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background-color: #1a73e8;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #1557b0;
+    }
+
+    .btn-secondary {
+      background-color: #fff;
+      color: #5f6368;
+      border: 1px solid #dadce0;
+    }
+
+    .btn-secondary:hover {
+      background-color: #f8f9fa;
+    }
+
+    .btn-success {
+      background-color: #34a853;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: #2d8e47;
+    }
+
+    .status {
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .status-info {
+      background-color: #e8f0fe;
+      color: #1967d2;
+    }
+
+    .status-success {
+      background-color: #e6f4ea;
+      color: #137333;
+    }
+
+    .status-error {
+      background-color: #fce8e6;
+      color: #c5221f;
+    }
+
+    .status-warning {
+      background-color: #fef7e0;
+      color: #ea8600;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #1a73e8;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .date-input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 8px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .stat-item {
+      text-align: center;
+      flex: 1;
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a73e8;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #5f6368;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🔌 API Status</h2>
+    <button class="btn-secondary" onclick="testConnection()">Test Connection</button>
+    <div id="connectionStatus"></div>
+  </div>
+
+  <div class="card">
+    <h2>➕ Create Clients</h2>
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-number" id="pendingCount">-</div>
+        <div class="stat-label">Pending</div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="createClients()">Create All New Clients</button>
+    <div id="clientStatus"></div>
+  </div>
+
+  <div class="card">
+    <h2>📅 Training Events</h2>
+    <button class="btn-success" onclick="fetchThisMonth()">Fetch This Month</button>
+
+    <h3 style="margin-top: 16px;">Custom Date Range</h3>
+    <input type="date" class="date-input" id="startDate">
+    <input type="date" class="date-input" id="endDate">
+    <button class="btn-secondary" onclick="fetchCustomRange()">Fetch Custom Range</button>
+    <div id="eventsStatus"></div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <div>Processing...</div>
+  </div>
+
+  <script>
+    // Load pending count on startup
+    window.onload = function() {
+      updatePendingCount();
+    };
+
+    function showLoading() {
+      document.getElementById('loading').style.display = 'block';
+    }
+
+    function hideLoading() {
+      document.getElementById('loading').style.display = 'none';
+    }
+
+    function updatePendingCount() {
+      google.script.run
+        .withSuccessHandler(function(count) {
+          document.getElementById('pendingCount').textContent = count;
+        })
+        .withFailureHandler(function(error) {
+          document.getElementById('pendingCount').textContent = '?';
+        })
+        .getPendingClientCount();
+    }
+
+    function testConnection() {
+      showLoading();
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideLoading();
+          if (result.success) {
+            document.getElementById('connectionStatus').innerHTML =
+              '<div class="status status-success">✓ Connected to Neoserra API</div>';
+          } else {
+            document.getElementById('connectionStatus').innerHTML =
+              '<div class="status status-error">✗ Connection failed: ' + result.error + '</div>';
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          document.getElementById('connectionStatus').innerHTML =
+            '<div class="status status-error">✗ Error: ' + error.message + '</div>';
+        })
+        .testApiConnection();
+    }
+
+    function createClients() {
+      showLoading();
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideLoading();
+          document.getElementById('clientStatus').innerHTML =
+            '<div class="status status-success">✓ Created ' + result.success + ' clients<br>Errors: ' + result.errors + '</div>';
+          updatePendingCount();
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          document.getElementById('clientStatus').innerHTML =
+            '<div class="status status-error">✗ Error: ' + error.message + '</div>';
+        })
+        .createAllNewClients();
+    }
+
+    function fetchThisMonth() {
+      showLoading();
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideLoading();
+          document.getElementById('eventsStatus').innerHTML =
+            '<div class="status status-success">✓ Fetched ' + result.count + ' events for ' + result.month + '</div>';
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          document.getElementById('eventsStatus').innerHTML =
+            '<div class="status status-error">✗ Error: ' + error.message + '</div>';
+        })
+        .fetchTrainingEventsThisMonth();
+    }
+
+    function fetchCustomRange() {
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+
+      if (!startDate || !endDate) {
+        document.getElementById('eventsStatus').innerHTML =
+          '<div class="status status-warning">⚠ Please select both start and end dates</div>';
+        return;
+      }
+
+      showLoading();
+      google.script.run
+        .withSuccessHandler(function(result) {
+          hideLoading();
+          if (result.success) {
+            document.getElementById('eventsStatus').innerHTML =
+              '<div class="status status-success">✓ Fetched ' + result.count + ' events</div>';
+          } else {
+            document.getElementById('eventsStatus').innerHTML =
+              '<div class="status status-error">✗ Error: ' + result.error + '</div>';
+          }
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          document.getElementById('eventsStatus').innerHTML =
+            '<div class="status status-error">✗ Error: ' + error.message + '</div>';
+        })
+        .fetchTrainingEventsCustom(startDate, endDate);
+    }
+  </script>
+</body>
+</html>

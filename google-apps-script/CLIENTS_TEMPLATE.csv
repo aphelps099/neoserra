@@ -1,0 +1,4 @@
+Client ID,Company Name,Client Type,Physical Address,City,State,ZIP Code,Phone Number,Email Address,Website,Status
+CL001,Sample Business LLC,AC,123 Main Street,Oakland,CA,94612,510-555-0100,contact@samplebiz.com,https://samplebiz.com,
+CL002,Tech Startup Inc,PC,456 Innovation Way,San Francisco,CA,94105,415-555-0200,info@techstartup.io,https://techstartup.io,
+CL003,Local Coffee Shop,AC,789 Market Street,Berkeley,CA,94704,510-555-0300,hello@localcoffee.com,,
